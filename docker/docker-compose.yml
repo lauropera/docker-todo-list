@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   todofront:
     depends_on:
       - todoback
@@ -9,14 +8,17 @@ services:
       - 3000:3000
     environment:
       - REACT_APP_API_HOST=todoback
+      - REACT_APP_API_PORT=3001
     restart: always
-
+    networks:
+      - app-network
   todoback:
     build: ./todo-app/back-end/
     restart: always
     ports:
       - 3001:3001
-
+    networks:
+      - app-network
   todotests:
     build: ./todo-app/tests/
     depends_on:
@@ -24,3 +26,8 @@ services:
       - todofront
     environment:
       - FRONT_HOST=todofront
+      - FRONT_PORT=3000
+    networks:
+      - app-network
+networks:
+  app-network:
